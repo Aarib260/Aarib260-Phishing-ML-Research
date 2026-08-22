@@ -1,284 +1,257 @@
-# ML-Based Phishing URL Detection
+# Literature Review: Machine Learning-Based Phishing URL Detection
 
-## 1. Research Problem
+## 1. Introduction
 
-### What is phishing URL detection?
+Phishing is a form of cyberattack in which attackers attempt to deceive users into interacting with malicious websites or providing sensitive information. Because phishing URLs can be created rapidly and changed frequently, automated detection has become an important cybersecurity research problem.
 
-Phishing URL detection can be formulated as a binary classification problem. A URL is represented using measurable features and classified as either **phishing (malicious)** or **legitimate (benign)**.
+Phishing URL detection can be formulated as a binary classification problem. A URL is represented using measurable characteristics and classified as either **phishing (malicious)** or **legitimate (benign)**.
 
-### Why is automated detection important?
-
-The large and constantly changing number of URLs makes manual identification impractical. Attackers can rapidly create new phishing websites, including previously unseen threats that may not yet appear in security blacklists.
-
-Automated detection can help identify suspicious URLs using patterns learned from previously observed examples.
-
-### Limitations of traditional approaches
-
-Traditional list-based approaches, such as blacklists and whitelists, can be highly effective for known threats but are primarily reactive.
-
-A newly created phishing URL may remain undetected until it is identified, reported, and added to a security database.
-
-Machine-learning approaches provide an alternative by attempting to identify patterns associated with phishing URLs, including previously unseen examples.
+Traditional security systems, particularly blacklists, are effective at identifying previously reported malicious URLs. However, they are primarily reactive: a newly created phishing URL may not be detected until it has been identified and added to a security database. This limitation has motivated research into machine-learning methods that can identify patterns associated with previously unseen phishing URLs.
 
 ---
 
-## 2. Existing Approaches
+## 2. Existing Approaches to Phishing Detection
 
-### Blacklists
+### 2.1 Blacklist-Based Detection
 
-Blacklists maintain databases of known malicious URLs.
+Blacklist-based systems compare URLs against databases of previously identified malicious websites. These systems are generally fast and effective for known threats.
 
-**Advantages:**
-- Fast
-- Effective for known threats
-- Simple to implement
+However, their main limitation is their dependence on previously identified URLs. Newly created phishing URLs may remain undetected until they are reported and added to the blacklist.
 
-**Limitations:**
-- Struggle with newly created URLs
-- Depend on previously identified threats
+### 2.2 Heuristic Detection
 
-### Heuristics
+Heuristic approaches use predefined rules or indicators to identify suspicious URLs. Examples include unusual URL structures, excessive subdomains, suspicious characters, or abnormal domain characteristics.
 
-Heuristic systems use predefined rules or indicators to identify suspicious URLs, such as unusual URL structures, excessive subdomains, or suspicious characters.
+Although heuristics can detect some previously unseen threats, attackers can adapt their techniques to avoid known rules. Heuristic systems can also produce false positives when legitimate URLs happen to match suspicious patterns.
 
-**Advantages:**
-- Can identify some previously unseen threats
-- Relatively fast
+### 2.3 Machine Learning
 
-**Limitations:**
-- Can produce false positives
-- Attackers can adapt to predefined rules
+Machine-learning approaches attempt to learn statistical patterns from labelled phishing and legitimate URLs.
 
-### Machine Learning
+Instead of relying entirely on predefined rules, a model can learn relationships between URL characteristics and their corresponding labels. Commonly investigated algorithms include:
 
-Machine-learning approaches learn statistical patterns from labelled examples of phishing and legitimate URLs.
+- Logistic Regression
+- Support Vector Machines
+- Decision Trees
+- Random Forest
+- Gradient Boosting
+- Neural Networks
 
-They can use structural, lexical, domain, or other measurable features to classify previously unseen URLs.
+Machine learning therefore provides a potential approach for identifying phishing URLs that have not previously appeared in security databases.
 
-### Deep Learning
+### 2.4 Deep Learning
 
-Deep-learning models, including convolutional and recurrent neural networks, can learn representations directly from URL characters or other input data.
+Deep-learning approaches can learn complex representations from URL characters, webpage information, or other features. Convolutional and recurrent neural networks have been investigated for this purpose.
 
-**Advantages:**
-- Can learn complex patterns
-- Can reduce manual feature engineering
-
-**Limitations:**
-- Greater computational requirements
-- More difficult to interpret
-- Performance can depend heavily on dataset quality and size
+Deep learning can reduce reliance on manually engineered features, but it generally requires greater computational resources and can be more difficult to interpret.
 
 ---
 
-## 3. Feature Engineering
+## 3. Feature Engineering in Phishing Detection
 
-The project focuses primarily on features that can be extracted from URLs without directly interacting with potentially malicious websites.
+Feature engineering is an important part of traditional machine-learning approaches to phishing detection. Researchers have investigated several categories of features.
 
-### URL / Lexical Features
+### 3.1 Lexical and URL-Based Features
+
+Lexical features are extracted directly from the URL string.
 
 Examples include:
 
 - URL length
-- Token count
-- Entropy
-- Number of special characters
+- Number of characters
 - Number of dots
 - Number of subdomains
+- Number of special characters
+- Token count
+- Entropy
+- Presence of suspicious terms
 - Top-level domain characteristics
 
-**Advantages:**
-- Fast to extract
-- Relatively safe
-- Does not require visiting the website
+A major advantage of lexical features is that they can be extracted without directly visiting the website. This makes them relatively fast and reduces the risk associated with interacting with potentially malicious content.
 
-**Limitations:**
-- Attackers can manipulate URL structures
-- Some phishing URLs can closely resemble legitimate URLs
+However, attackers can manipulate the structure of URLs, meaning that lexical characteristics alone may not always provide sufficient information.
 
-### Domain / Host Features
+### 3.2 Domain and Host-Based Features
 
-Examples include:
+Domain-based features can include:
 
 - Domain age
 - IP address
 - Registrar information
-- TLD characteristics
+- DNS characteristics
+- Top-level domain
 
-These features can provide useful contextual information but may require external databases or services.
+These features can provide additional contextual information about the website.
 
-### HTML / Content Features
+However, obtaining some domain characteristics may require external services or databases, which can introduce additional latency and availability issues.
+
+### 3.3 HTML and Content Features
+
+Researchers have also investigated features obtained from webpage content.
 
 Examples include:
 
 - JavaScript characteristics
-- Hidden elements
-- Iframes
 - Forms
+- Iframes
+- Hidden elements
 - Page structure
+- External resources
 
-These features can provide additional information but require accessing the webpage, increasing computational cost and introducing potential security risks.
+These features can provide additional information about the behavior and structure of phishing websites. However, obtaining them generally requires accessing the website, increasing computational requirements and introducing potential security risks.
 
-### Behavioral Features
+### 3.4 Behavioral Features
 
-Examples include:
+Behavioral features can include:
 
 - Redirect chains
 - Network behavior
 - Website interactions
+- Popularity information
 
-These can provide valuable information but are more difficult to collect consistently.
-
----
-
-## 4. Machine-Learning Models
-
-The project will initially investigate several traditional machine-learning approaches.
-
-### Logistic Regression
-
-Used as a simple and interpretable baseline classifier.
-
-### Decision Tree
-
-Provides an interpretable model capable of learning nonlinear decision boundaries.
-
-### Random Forest
-
-Random Forest is widely used for tabular cybersecurity classification because it can model nonlinear relationships and interactions between features.
-
-It can also provide feature-importance estimates that help investigate which characteristics contribute to classification.
-
-### Neural Networks
-
-Neural networks can learn complex relationships from sufficiently large datasets, but their greater complexity can make interpretation more difficult.
-
-> **Important:** High accuracy on one dataset does not necessarily demonstrate strong real-world performance. Dataset composition, feature selection, evaluation methodology, and dataset-specific patterns must also be considered.
+These features can provide valuable information but can be more difficult to collect consistently because they depend on dynamic website behavior.
 
 ---
 
-## 5. Datasets
+## 4. Machine-Learning Models in Previous Research
 
-### PhiUSIIL
+### 4.1 Logistic Regression
 
-**Size:** 235,795 instances
+Logistic Regression provides a relatively simple baseline for binary classification. Its simplicity and interpretability make it useful for establishing baseline performance.
 
-**Class distribution:**
+### 4.2 Decision Trees
 
-- 134,850 legitimate
-- 100,945 phishing
+Decision Trees can model nonlinear relationships between features and provide relatively interpretable classification rules.
 
-**Features:** 54
+### 4.3 Random Forest
 
-**Labels:**
+Random Forest has been frequently investigated for phishing detection, particularly when working with tabular feature data.
 
-- `1` = legitimate
-- `0` = phishing
+Its ability to model nonlinear relationships and interactions between features makes it useful for cybersecurity classification. It can also provide feature-importance estimates, which can help researchers investigate which characteristics influence predictions.
 
-#### Why use it?
+However, Random Forest is not immune to overfitting. Its performance depends on factors including dataset composition, feature selection, and model configuration.
 
-PhiUSIIL provides a large dataset with a diverse set of features, making it useful for developing and evaluating machine-learning models.
+### 4.4 Neural Networks
 
-#### Potential limitation
+Neural networks can learn complex relationships from sufficiently large datasets and have achieved strong performance in various phishing-detection studies.
 
-Its large feature set may introduce unnecessary complexity. Some features may also be difficult to reproduce consistently across an independent dataset.
+However, reported performance can vary substantially depending on the dataset and evaluation methodology. Neural networks can also be more difficult to interpret than traditional models.
 
----
-
-### LegitPhish
-
-**Size:** 101,219 labelled URLs
-
-**Class distribution:**
-
-- 63,678 phishing
-- 37,540 legitimate
-
-**Features:** 17 structural and lexical features
-
-#### Why use it?
-
-LegitPhish provides a more recent dataset with documented data provenance and verification procedures.
-
-Its focused feature set is useful for investigating whether URL characteristics alone can provide effective classification.
-
-#### Potential limitation
-
-Its smaller feature set may not capture information available through HTML, webpage content, or other contextual features.
+Therefore, high accuracy alone should not be treated as evidence of strong real-world generalization.
 
 ---
 
-## 6. Dataset Bias
+## 5. Datasets Used in Phishing Detection Research
 
-A broader issue in phishing-detection research is the use of different sources for phishing and legitimate URLs.
+The quality and composition of a dataset can strongly influence the results of a machine-learning study.
 
-For example, phishing URLs may be collected from one security database while legitimate URLs may be obtained from popular-site lists.
+### 5.1 PhiUSIIL
 
-If these sources have systematic differences, a model may learn characteristics associated with the **data sources** rather than genuine phishing behavior.
+The PhiUSIIL dataset contains **235,795 instances**, consisting of:
 
-This creates a potential **dataset bias** problem.
+- 134,850 legitimate URLs
+- 100,945 phishing URLs
 
-Cross-dataset evaluation can help investigate whether a model has learned general phishing characteristics or has become dependent on patterns specific to its training dataset.
+The dataset contains **54 features** covering different characteristics of URLs and associated webpages.
+
+The large number of examples makes PhiUSIIL useful for developing machine-learning models.
+
+However, its relatively large feature set also raises an important research question: whether all available features are necessary and whether the same features can be reproduced consistently on an independent dataset.
+
+### 5.2 LegitPhish
+
+LegitPhish contains **101,219 labelled URLs**, consisting of:
+
+- 63,678 phishing URLs
+- 37,540 legitimate URLs
+
+The dataset focuses on **17 structural and lexical features**.
+
+Its more focused feature set makes it particularly relevant to research investigating whether URL characteristics alone can provide effective phishing detection.
+
+At the same time, its smaller feature set means that it does not contain the same breadth of webpage and content information available in some larger datasets.
+
+---
+
+## 6. Dataset Bias and Generalization
+
+An important issue identified throughout phishing-detection research is **dataset bias**.
+
+Different datasets may obtain phishing and legitimate URLs from different sources. For example, phishing URLs may be collected from security databases while legitimate URLs may be obtained from lists of popular websites.
+
+If the two groups have systematic differences caused by their sources, machine-learning models may learn characteristics associated with the datasets rather than genuine phishing behavior.
+
+This creates a major concern when interpreting very high classification results.
+
+A model that achieves 99% accuracy on a random test split from the same dataset used for training may not necessarily achieve 99% accuracy when presented with independently collected URLs.
+
+Therefore, **cross-dataset evaluation** provides an important way of investigating model generalization.
 
 ---
 
 ## 7. Research Gap
 
-Existing studies frequently report high classification performance, sometimes above 98–99%, when models are evaluated using random train/test splits from the same dataset.
+The literature demonstrates that machine-learning approaches can achieve strong performance in phishing URL classification. However, several challenges remain.
 
-However:
+### Generalizability
 
-> **High within-dataset performance does not necessarily mean that a model will perform equally well on independently collected data.**
+It is unclear whether models that perform well on one dataset will maintain their performance on independently collected data.
 
-Important unresolved challenges include:
+### Dataset Bias
 
-- **Generalizability** — Does a model trained on one dataset work effectively on another?
-- **Dataset bias** — Is the model learning phishing characteristics or dataset-specific patterns?
-- **Robustness** — Does performance remain stable when the data distribution changes?
-- **Feature dependence** — Which URL characteristics actually contribute to classification?
-- **Explainability** — Can we understand why a model classifies a URL as phishing?
+Models may learn patterns specific to the sources or collection methods used to construct a dataset.
+
+### Robustness
+
+Changes in URL structures, attacker behavior, or dataset composition may affect model performance.
+
+### Feature Dependence
+
+A model may achieve high performance because of a small number of highly predictive features. Understanding which features contribute most to classification is therefore important.
+
+### Explainability
+
+Understanding why a model identifies a URL as phishing can provide insight into whether it has learned meaningful cybersecurity characteristics.
+
+These challenges motivate further investigation into cross-dataset performance rather than relying exclusively on within-dataset accuracy.
 
 ---
 
-## 8. Research Question
+## 8. Proposed Research Direction
+
+Based on the gaps identified in the literature, this project will investigate the following research question:
 
 > **How well do machine-learning models trained on one phishing URL dataset generalize to an independent dataset, and which URL features contribute most to their performance?**
 
----
+### Hypotheses
 
-## 9. Hypotheses
-
-### H1 — Generalization
+**H1 — Generalization**
 
 Machine-learning models will achieve strong performance on an internal test set but experience a measurable decrease in performance when evaluated on an independent dataset.
 
-### H2 — URL Features
+**H2 — URL Features**
 
 Lexical and structural URL features can provide useful phishing-detection performance without requiring direct interaction with webpage content.
 
-### H3 — Feature Importance
+**H3 — Feature Importance**
 
 The importance of individual URL features will differ between datasets, suggesting that dataset composition can influence which characteristics models rely on.
 
 ---
 
-## 10. Proposed Methodology
+## 9. Proposed Methodology
 
-The study will first investigate the compatibility of features between PhiUSIIL and LegitPhish rather than assuming that similarly named features are calculated identically.
+The first stage of the research will investigate whether the features available in PhiUSIIL and LegitPhish are directly comparable.
 
-If comparable features are available:
+This is important because features with similar names may not necessarily be calculated using identical definitions or methods.
 
-1. Prepare the datasets.
-2. Select a common feature set.
-3. Train Logistic Regression, Decision Tree, and Random Forest models.
-4. Evaluate performance using an internal test set.
-5. Evaluate the trained models on an independent dataset.
-6. Compare the results.
-7. Analyze feature importance.
-8. Investigate changes in performance between datasets.
+If a common feature set can be established, several traditional machine-learning models will be evaluated, including:
 
-### Evaluation Metrics
+- Logistic Regression
+- Decision Tree
+- Random Forest
 
-The models will be compared using:
+The models will be evaluated using:
 
 - Accuracy
 - Precision
@@ -287,43 +260,39 @@ The models will be compared using:
 - False-positive rate
 - Computational efficiency
 
-If the features in the datasets are not directly comparable, a common set of lexical and structural features will be recalculated directly from the raw URLs.
+The study will compare:
+
+1. Performance on an internal test set.
+2. Performance on an independent dataset.
+3. Differences in feature importance.
+4. Changes in performance between datasets.
+
+If the features cannot be directly compared, a common set of lexical and structural features will be recalculated from the raw URLs where possible.
 
 ---
 
-## 11. Expected Contribution
+## 10. Expected Contribution
 
-Rather than focusing only on achieving the highest possible accuracy, this research investigates whether apparently strong phishing-detection models **generalize beyond the dataset on which they were developed**.
+The purpose of this research is not simply to build a phishing classifier with the highest possible accuracy.
 
-The project aims to demonstrate the importance of:
+Instead, the study aims to investigate whether apparently strong machine-learning models **generalize beyond the dataset on which they were developed**.
 
-- Independent evaluation
-- Feature selection
+The research will therefore focus on:
+
+- Cross-dataset generalization
 - Dataset bias
+- Feature importance
 - Model robustness
-- Feature interpretability
+- Independent evaluation
 
-in machine-learning-based phishing URL detection.
+This approach may provide a more realistic assessment of phishing URL detection than relying solely on random train/test splits within a single dataset.
 
 ---
 
-## Research Status
+## 11. Conclusion
 
-**Current Stage:** Literature Review
+Previous research demonstrates that machine learning can be effective for phishing URL detection. However, reported performance must be interpreted carefully because dataset composition, feature selection, and evaluation methodology can substantially influence results.
 
-**Next Stage:** Dataset Investigation
+The central focus of this research is therefore **generalization**: determining whether models that perform well on one dataset can maintain their performance when tested on independently collected data.
 
-### Datasets Under Consideration
-
-- PhiUSIIL
-- LegitPhish
-
-### Models Under Consideration
-
-- Logistic Regression
-- Decision Tree
-- Random Forest
-
-### Research Focus
-
-**Cross-dataset generalizability and feature importance**
+The next stage of the project will involve detailed investigation of the selected datasets, including their features, labels, class distributions, missing values, duplicates, and feature compatibility.
